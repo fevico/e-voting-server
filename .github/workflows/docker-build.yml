@@ -1,0 +1,29 @@
+name: E-voting Backend CI/CD
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # NEW STEP: Install your packages directly onto the Ubuntu machine
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build TypeScript
+      run: npm run build
+
+    # This step ONLY runs if 'npm test' passes successfully!
+    - name: Build Docker Image
+      run: docker build -t e-voting-backend:latest .  
